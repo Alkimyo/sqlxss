@@ -66,7 +66,7 @@ st.markdown(
 
 st.title('SQL Injection, XSS Detector')
 
-input_text = st.text_area("Buyruq kiriting:", height=150)
+input_text = st.text_area("Buyruq kiriting:", height=50)
 
 if st.button('Tahlil qilish'):
     if input_text:
