@@ -27,12 +27,13 @@ if st.button("Detect XSS"):
         # Tokenizing and padding the input text
         tokenizer.fit_on_texts(input_data)  # Fit on input data (or use the same tokenizer fitted on training data)
         sequences = tokenizer.texts_to_sequences(input_data)
-        padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust maxlen as needed
+        # Pad sequences to the correct length (1000 in this case)
+        padded_sequences = pad_sequences(sequences, maxlen=1000)
 
         # Prepare the second input (numeric feature) as a numpy array
         numeric_feature = np.array([[numeric_feature]])
 
-        # Combine both inputs into a tuple or list
+        # Combine both inputs into a list or tuple
         prediction = model.predict([padded_sequences, numeric_feature])
 
         # Show prediction result
