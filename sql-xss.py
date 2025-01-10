@@ -1,9 +1,15 @@
 import pickle
 import streamlit as st
 import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Load the model (ensure the .pkl file is in the same directory or provide the path)
 model = pickle.load(open('model.pkl', 'rb'))
+
+# Example of how the tokenizer was used during model training
+# This should match the tokenizer used to train your model.
+tokenizer = Tokenizer(num_words=5000)
 
 # Streamlit app layout
 st.title('XSS Detection Using ML Model')
@@ -14,13 +20,16 @@ input_text = st.text_area("Enter input for XSS detection:")
 # Prediction when button is clicked
 if st.button("Detect XSS"):
     if input_text:
-        # Convert input_text to an appropriate format (e.g., a single-element list or numpy array)
-        input_data = [input_text]  # This is the correct format (a list of strings)
+        # Preprocess the input text just like you did during training
+        input_data = [input_text]  # Wrap input text in a list
+        
+        # Tokenizing and padding the input text
+        tokenizer.fit_on_texts(input_data)  # Fit on input data (or use the same tokenizer fitted on training data)
+        sequences = tokenizer.texts_to_sequences(input_data)
+        padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust maxlen as needed
 
-        # If your model expects a NumPy array, you can convert it:
-        # input_data = np.array([input_text])
-
-        prediction = model.predict(input_data)  # Make prediction
+        # Make prediction
+        prediction = model.predict(padded_sequences)
 
         # Show prediction result
         if prediction[0] == 1:
