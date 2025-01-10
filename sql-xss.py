@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 # Modelni yuklash
-model = tf.keras.models.load_model('your_model_path')  # modelni to'g'ri yo'l bilan yuklang
+model = tf.keras.models.load_model('model,pkl') 
 
 # Kirish ma'lumotlarini tayyorlash funksiyalari
 def data2char_index(X, max_len, is_remove_comment=False):
