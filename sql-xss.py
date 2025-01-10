@@ -4,11 +4,10 @@ import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
-# Load the model (ensure the .pkl file is in the same directory or provide the path)
+# Load the model
 model = pickle.load(open('model.pkl', 'rb'))
 
 # Example of how the tokenizer was used during model training
-# This should match the tokenizer used to train your model.
 tokenizer = Tokenizer(num_words=5000)
 
 # Streamlit app layout
@@ -16,6 +15,8 @@ st.title('XSS Detection Using ML Model')
 
 # Input text box
 input_text = st.text_area("Enter input for XSS detection:")
+# Let's assume we also need a numerical feature (example: a numeric input)
+numeric_feature = st.number_input("Enter a numeric feature:", min_value=0, max_value=100, value=50)
 
 # Prediction when button is clicked
 if st.button("Detect XSS"):
@@ -28,8 +29,11 @@ if st.button("Detect XSS"):
         sequences = tokenizer.texts_to_sequences(input_data)
         padded_sequences = pad_sequences(sequences, maxlen=100)  # Adjust maxlen as needed
 
-        # Make prediction
-        prediction = model.predict(padded_sequences)
+        # Prepare the second input (numeric feature) as a numpy array
+        numeric_feature = np.array([[numeric_feature]])
+
+        # Combine both inputs into a tuple or list
+        prediction = model.predict([padded_sequences, numeric_feature])
 
         # Show prediction result
         if prediction[0] == 1:
