@@ -69,11 +69,10 @@ st.markdown(
     """, unsafe_allow_html=True)
 
 # Bosh sahifa dizayni
-st.title('SQL Injection, XSS va Normal Matnni Tahlil Qilish')
-st.subheader('Keling, matnni tahlil qilib, uning turini aniqlaymiz')
+st.title('SQL Injection, XSS Detector')
 
 # Matn kiritish
-input_text = st.text_area("Iltimos, matn kiriting:", height=150)
+input_text = st.text_area("Buyruq kiriting:", height=150)
 
 # Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
@@ -92,15 +91,15 @@ if st.button('Tahlil qilish'):
         # Jadval formatida natijalarni chiqarish
         st.write("Modelning prognozi:")
         result_df = pd.DataFrame({
-            'Class': ['SQL Injection', 'XSS', 'Normal'],
-            'Probability': prediction_rounded[0]
+            'Buyruqlar': ['SQL Injection', 'XSS', 'Normal'],
+            'Aloqadorligi': prediction_rounded[0]
         })
         st.table(result_df)
 
         # Qiziqarli vizual effektlar (masalan, ranglar)
-        if prediction_rounded[0][0] > 0.5:
+        if prediction_rounded[0][0] > 0.9:
             st.markdown('<p style="color:red;">Model SQL Injection topdi!</p>', unsafe_allow_html=True)
-        elif prediction_rounded[0][1] > 0.5:
+        elif prediction_rounded[0][1] > 0.9:
             st.markdown('<p style="color:blue;">Model XSS topdi!</p>', unsafe_allow_html=True)
         else:
             st.markdown('<p style="color:green;">Model Normal topdi!</p>', unsafe_allow_html=True)
