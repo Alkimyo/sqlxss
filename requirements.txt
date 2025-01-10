@@ -1,0 +1,4 @@
+keras
+streamlit
+pandas
+scikit-learn
