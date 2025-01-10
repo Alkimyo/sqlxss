@@ -67,34 +67,42 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
-st.title('SQL Injection va  XSS detektor')
+# Bosh sahifa dizayni
+st.title('SQL Injection, XSS va Normal Matnni Tahlil Qilish')
+st.subheader('Keling, matnni tahlil qilib, uning turini aniqlaymiz')
 
-input_text = st.text_area("Buyruq kiriting:", height=150)
+# Matn kiritish
+input_text = st.text_area("Iltimos, matn kiriting:", height=150)
 
+# Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
     if input_text:
+        # Kiruvchi qiymatlarni tayyorlash
         max_len = 1000
         input_text_encoded = data2char_index([input_text], max_len)
         input_symbol_encoded = data_to_symbol_tag([input_text], max_len)
 
+        # Modelga yuborish
         prediction = model.predict([input_text_encoded, input_symbol_encoded])
 
+        # Chiquvchi natijalarni 10 darajasi -2 gacha yaxlitlash
+        prediction_rounded = np.round(prediction, decimals=2)
+
+        # Natijalarni chiqarish
         st.write("Modelning prognozi:")
-        
-        prediction_data = {
-            "Buyruq  turi": ["SQL Injection", "XSS", "Normal"],
-            "O'xshashligi": [prediction[0][0], prediction[0][1], prediction[0][2]]
-        }
-        
-        st.table(prediction_data)
+
+        # Natijalarni satr ko'rinishida chiqarish
+        st.write(f"SQL Injection: {prediction_rounded[0][0]}")
+        st.write(f"XSS: {prediction_rounded[0][1]}")
+        st.write(f"Normal: {prediction_rounded[0][2]}")
 
         # Qiziqarli vizual effektsiz (masalan, ranglar)
-        if prediction[0][0] > 0.9:
-            st.markdown('<p style="color:red;">SQL Injection</p>', unsafe_allow_html=True)
-        elif prediction[0][1] > 0.9:
-            st.markdown('<p style="color:blue;">XSS</p>', unsafe_allow_html=True)
+        if prediction_rounded[0][0] > 0.5:
+            st.markdown('<p style="color:red;">Model SQL Injection topdi!</p>', unsafe_allow_html=True)
+        elif prediction_rounded[0][1] > 0.5:
+            st.markdown('<p style="color:blue;">Model XSS topdi!</p>', unsafe_allow_html=True)
         else:
-            st.markdown('<p style="color:green;">oddiy buyruq</p>', unsafe_allow_html=True)
+            st.markdown('<p style="color:green;">Model Normal topdi!</p>', unsafe_allow_html=True)
 
     else:
         st.warning("Iltimos, matn kiriting va tugmani bosing.")
