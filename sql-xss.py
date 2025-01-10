@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pickle
 import tensorflow as tf
+import pandas as pd
 
 # Modelni yuklash
 with open('model.pkl', 'rb') as f: 
@@ -88,10 +89,13 @@ if st.button('Tahlil qilish'):
         # Chiquvchi natijalarni 10 darajasi -2 gacha yaxlitlash
         prediction_rounded = np.round(prediction, decimals=2)
 
-        # Natijalarni chiqarish (satr shaklida)
+        # Jadval formatida natijalarni chiqarish
         st.write("Modelning prognozi:")
-        result_text = f"SQL Injection: {prediction_rounded[0][0]}\nXSS: {prediction_rounded[0][1]}\nNormal: {prediction_rounded[0][2]}"
-        st.text(result_text)
+        result_df = pd.DataFrame({
+            'Class': ['SQL Injection', 'XSS', 'Normal'],
+            'Probability': prediction_rounded[0]
+        })
+        st.table(result_df)
 
         # Qiziqarli vizual effektlar (masalan, ranglar)
         if prediction_rounded[0][0] > 0.5:
