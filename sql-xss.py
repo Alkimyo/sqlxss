@@ -11,6 +11,9 @@ st.title('XSS Detection Using ML Model')
 # Input text box
 input_text = st.text_area("Enter input for XSS detection:")
 
+# Example of numeric feature (this should be based on your model)
+numeric_feature = 1  # Replace with actual feature, if applicable
+
 # Function to preprocess the input (same as used during model training)
 def preprocess_input(input_text, max_len=1000):
     alphabet = " abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
@@ -35,8 +38,11 @@ if st.button("Detect XSS"):
         # Preprocess the input before prediction
         preprocessed_input = preprocess_input([input_text])
 
+        # Prepare the inputs for prediction (model expects 2 inputs)
+        inputs = [preprocessed_input, numeric_feature]
+
         # Make prediction
-        prediction = model.predict(preprocessed_input)
+        prediction = model.predict(inputs)
 
         # Show prediction result
         if prediction[0] == 1:
