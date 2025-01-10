@@ -4,9 +4,11 @@ import pickle
 import tensorflow as tf
 import pandas as pd
 
+# Modelni yuklash
 with open('model.pkl', 'rb') as f: 
     model = pickle.load(f)
 
+# Kirish ma'lumotlarini tayyorlash funksiyalari
 def data2char_index(X, max_len, is_remove_comment=False):
     alphabet = " abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
     result = []
@@ -38,8 +40,10 @@ def data_to_symbol_tag(X, max_len, is_remove_comment=False):
         result.append(mat)
     return tf.keras.preprocessing.sequence.pad_sequences(np.array(result), padding='post', truncating='post', maxlen=max_len)
 
+# Streamlit ilovasi
 st.set_page_config(page_title="SQL Injection, XSS va Normal Matnni Tahlil Qilish", page_icon=":guardsman:", layout="wide")
 
+# Sahifaning fonini o'zgartirish
 st.markdown(
     """
     <style>
@@ -64,32 +68,39 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
-st.title('SQL Injection, XSS Detector')
+# Bosh sahifa dizayni
+st.title('SQL Injection, XSS va Normal Matnni Tahlil Qilish')
+st.subheader('Keling, matnni tahlil qilib, uning turini aniqlaymiz')
 
-input_text = st.text_area("Buyruq kiriting:", height=50)
+# Matn kiritish
+input_text = st.text_area("Iltimos, matn kiriting:", height=150)
 
+# Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
     if input_text:
+        # Kiruvchi qiymatlarni tayyorlash
         max_len = 1000
         input_text_encoded = data2char_index([input_text], max_len)
         input_symbol_encoded = data_to_symbol_tag([input_text], max_len)
 
-      
+        # Modelga yuborish
         prediction = model.predict([input_text_encoded, input_symbol_encoded])
 
+        # Chiquvchi natijalarni 10 darajasi -2 gacha yaxlitlash
         prediction_rounded = np.round(prediction, decimals=2)
 
+        # Jadval formatida natijalarni chiqarish
         st.write("Modelning prognozi:")
         result_df = pd.DataFrame({
-            'Buyruqlar': ['SQL Injection', 'XSS', 'Normal'],
-            'Aloqadorligi': prediction_rounded[0]
+            'Class': ['SQL Injection', 'XSS', 'Normal'],
+            'Probability': prediction_rounded[0]
         })
         st.table(result_df)
 
         # Qiziqarli vizual effektlar (masalan, ranglar)
-        if prediction_rounded[0][0] > 0.9:
+        if prediction_rounded[0][0] > 0.5:
             st.markdown('<p style="color:red;">Model SQL Injection topdi!</p>', unsafe_allow_html=True)
-        elif prediction_rounded[0][1] > 0.9:
+        elif prediction_rounded[0][1] > 0.5:
             st.markdown('<p style="color:blue;">Model XSS topdi!</p>', unsafe_allow_html=True)
         else:
             st.markdown('<p style="color:green;">Model Normal topdi!</p>', unsafe_allow_html=True)
