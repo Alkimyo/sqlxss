@@ -2,8 +2,8 @@ import streamlit as st
 import numpy as np
 import tensorflow as tf
 
-# Modelni yuklash
-model = tf.keras.models.load_model('model,pkl') 
+with open('model.pkl', 'rb') as f: 
+    model = pickle.load(f)
 
 # Kirish ma'lumotlarini tayyorlash funksiyalari
 def data2char_index(X, max_len, is_remove_comment=False):
