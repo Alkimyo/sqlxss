@@ -67,34 +67,25 @@ st.markdown(
     </style>
     """, unsafe_allow_html=True)
 
-# Bosh sahifa dizayni
-st.title('SQL Injection, XSS va Normal Matnni Tahlil Qilish')
-st.subheader('Keling, matnni tahlil qilib, uning turini aniqlaymiz')
+st.title('SQL Injection va  XSS detektor')
 
-# Matn kiritish
-input_text = st.text_area("Iltimos, matn kiriting:", height=150)
+input_text = st.text_area("Buyruq kiriting:", height=150)
 
-# Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
     if input_text:
-        # Kiruvchi qiymatlarni tayyorlash
         max_len = 1000
         input_text_encoded = data2char_index([input_text], max_len)
         input_symbol_encoded = data_to_symbol_tag([input_text], max_len)
 
-        # Modelga yuborish
         prediction = model.predict([input_text_encoded, input_symbol_encoded])
 
-        # Natijalarni chiqarish
         st.write("Modelning prognozi:")
         
-        # Natijalarni jadvalda ko'rsatish
         prediction_data = {
-            "Class": ["SQL Injection", "XSS", "Normal"],
-            "Probability": [prediction[0][0], prediction[0][1], prediction[0][2]]
+            "Buyruq  turi": ["SQL Injection", "XSS", "Normal"],
+            "O'xshashligi": [prediction[0][0], prediction[0][1], prediction[0][2]]
         }
         
-        # Ustun ko'rinishida natijalarni chiqarish
         st.table(prediction_data)
 
         # Qiziqarli vizual effektsiz (masalan, ranglar)
