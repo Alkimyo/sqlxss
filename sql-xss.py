@@ -88,15 +88,12 @@ if st.button('Tahlil qilish'):
         # Chiquvchi natijalarni 10 darajasi -2 gacha yaxlitlash
         prediction_rounded = np.round(prediction, decimals=2)
 
-        # Natijalarni chiqarish
+        # Natijalarni chiqarish (satr shaklida)
         st.write("Modelning prognozi:")
+        result_text = f"SQL Injection: {prediction_rounded[0][0]}\nXSS: {prediction_rounded[0][1]}\nNormal: {prediction_rounded[0][2]}"
+        st.text(result_text)
 
-        # Natijalarni satr ko'rinishida chiqarish
-        st.write(f"SQL Injection: {prediction_rounded[0][0]}")
-        st.write(f"XSS: {prediction_rounded[0][1]}")
-        st.write(f"Normal: {prediction_rounded[0][2]}")
-
-        # Qiziqarli vizual effektsiz (masalan, ranglar)
+        # Qiziqarli vizual effektlar (masalan, ranglar)
         if prediction_rounded[0][0] > 0.5:
             st.markdown('<p style="color:red;">Model SQL Injection topdi!</p>', unsafe_allow_html=True)
         elif prediction_rounded[0][1] > 0.5:
