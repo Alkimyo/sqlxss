@@ -1,5 +1,6 @@
 import pickle
 import streamlit as st
+import numpy as np
 from keras.preprocessing.sequence import pad_sequences
 
 # Load the model (ensure the .pkl file is in the same directory or provide the path)
@@ -30,7 +31,7 @@ def preprocess_input(input_text, max_len=1000):
         result.append(mat)
     
     padded_input = pad_sequences(result, padding='post', truncating='post', maxlen=max_len)
-    return padded_input
+    return np.array(padded_input)
 
 # Prediction when button is clicked
 if st.button("Detect XSS"):
@@ -39,15 +40,20 @@ if st.button("Detect XSS"):
         preprocessed_input = preprocess_input([input_text])
 
         # Prepare the inputs for prediction (model expects 2 inputs)
+        # Convert the numeric feature to numpy array and ensure inputs are correctly formatted
+        numeric_feature = np.array([numeric_feature])
         inputs = [preprocessed_input, numeric_feature]
 
         # Make prediction
-        prediction = model.predict(inputs)
+        try:
+            prediction = model.predict(inputs)
 
-        # Show prediction result
-        if prediction[0] == 1:
-            st.success("XSS Detected!")
-        else:
-            st.success("No XSS Detected!")
+            # Show prediction result
+            if prediction[0] == 1:
+                st.success("XSS Detected!")
+            else:
+                st.success("No XSS Detected!")
+        except Exception as e:
+            st.error(f"Prediction error: {str(e)}")
     else:
         st.warning("Please enter some text for detection.")
