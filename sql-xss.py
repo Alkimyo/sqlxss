@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pickle
 import tensorflow as tf
 
 with open('model.pkl', 'rb') as f: 
