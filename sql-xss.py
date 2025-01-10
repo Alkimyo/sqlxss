@@ -73,7 +73,7 @@ st.title('SQL Injection, XSS va Normal Matnni Tahlil Qilish')
 st.subheader('Keling, matnni tahlil qilib, uning turini aniqlaymiz')
 
 # Matn kiritish
-input_text = st.text_area("Iltimos, matn kiriting:", height=50)
+input_text = st.text_area("Iltimos, matn kiriting:", height=100)
 
 # Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
