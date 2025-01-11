@@ -43,31 +43,40 @@ def data_to_symbol_tag(X, max_len, is_remove_comment=False):
 # Streamlit ilovasi
 st.set_page_config(page_title="SQL Injection, XSS va Normal Matnni Tahlil Qilish", page_icon=":guardsman:", layout="wide")
 
-# Sahifaning fonini va tugma ranglarini sozlash
 st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f5f5f5;  /* Sahifaning foni */
+        background-color: #f9f9f9;  /* Yorqin kulrang fon */
     }
     .stTextInput>div>div>textarea {
         font-size: 16px;
-        background-color: #ffffff;
-        border-radius: 5px;
+        background-color: #ffffff; /* Oq fon */
+        border-radius: 8px;
+        border: 1px solid #cccccc; /* Yengil kulrang ramka */
+        color: #333333; /* Qoraga yaqin matn rangi */
     }
     .stButton>button {
-        background-color: #007BFF;  /* Tugma rangi */
+        background-color: #0078d4;  /* Ko‘k tugma */
         color: white;
         font-size: 16px;
         padding: 10px 20px;
-        border-radius: 8px;
+        border-radius: 6px;
         border: none;
+        transition: 0.3s;
     }
     .stButton>button:hover {
-        background-color: #0056b3;  /* Tugma hover effekti */
+        background-color: #005bb5;  /* Hover effekti uchun quyuq ko‘k */
+    }
+    .stTitle {
+        color: #212529; /* Matn uchun quyuq rang */
+    }
+    .stSubheader {
+        color: #495057; /* Subheader matni uchun yengilroq quyuq rang */
     }
     </style>
     """, unsafe_allow_html=True)
+
 
 # Bosh sahifa dizayni
 st.title('SQL Injection va XSS Detektori')
