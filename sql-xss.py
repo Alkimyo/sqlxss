@@ -43,40 +43,42 @@ def data_to_symbol_tag(X, max_len, is_remove_comment=False):
 # Streamlit ilovasi
 st.set_page_config(page_title="SQL Injection, XSS va Normal Matnni Tahlil Qilish", page_icon=":guardsman:", layout="wide")
 
-# Sahifaning fonini o'zgartirish
+# Sahifaning fonini va tugma ranglarini sozlash
 st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f0f4f8;
+        background-color: #f5f5f5;  /* Sahifaning foni */
     }
-    .stTextInput>div>div>input {
-        font-size: 18px;
-    }
-    .css-1v0mbdj {
-        background-color: #4CAF50;
-        color: white;
+    .stTextInput>div>div>textarea {
+        font-size: 16px;
+        background-color: #ffffff;
         border-radius: 5px;
     }
     .stButton>button {
-        background-color: #4CAF50;
+        background-color: #007BFF;  /* Tugma rangi */
         color: white;
         font-size: 16px;
-        padding: 12px 20px;
-        border-radius: 5px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+    }
+    .stButton>button:hover {
+        background-color: #0056b3;  /* Tugma hover effekti */
     }
     </style>
     """, unsafe_allow_html=True)
 
 # Bosh sahifa dizayni
-st.title('SQL Injection, XSS detektor')
+st.title('SQL Injection va XSS Detektori')
+st.subheader('Matnni tahlil qilish va xavfli buyruqlarni aniqlash uchun tizim')
 
 # Matn kiritish
-input_text = st.text_area("Matn kiriting:", height=100)
+input_text = st.text_area("Matnni kiriting:", height=150, placeholder="SQL yoki JavaScript kodini kiriting...")
 
 # Modelni ishga tushirish tugmasi
 if st.button('Tahlil qilish'):
-    if input_text:
+    if input_text.strip():
         # Kiruvchi qiymatlarni tayyorlash
         max_len = 1000
         input_text_encoded = data2char_index([input_text], max_len)
@@ -85,24 +87,23 @@ if st.button('Tahlil qilish'):
         # Modelga yuborish
         prediction = model.predict([input_text_encoded, input_symbol_encoded])
 
-        # Chiquvchi natijalarni 10 darajasi -2 gacha yaxlitlash
+        # Chiquvchi natijalarni yaxlitlash
         prediction_rounded = np.round(prediction, decimals=2)
 
-        # Jadval formatida natijalarni chiqarish
-        st.write("Modelning prognozi:")
+        # Natijalarni jadval formatida ko'rsatish
+        st.write("Tahlil natijalari:")
         result_df = pd.DataFrame({
-            'Buyruqlar': ['SQL Injection', 'XSS', 'Normal'],
+            'Buyruqlar': ['SQL Injection', 'XSS', 'Oddiy Matn'],
             'Aloqadorligi': prediction_rounded[0]
         })
         st.table(result_df)
 
-        # Qiziqarli vizual effektlar (masalan, ranglar)
+        # Natija bo'yicha xabar chiqarish
         if prediction_rounded[0][0] > 0.9:
-            st.markdown('<p style="color:red;">SQL Injection</p>', unsafe_allow_html=True)
+            st.markdown('<p style="color:red; font-size:20px;">Ehtimol: SQL Injection</p>', unsafe_allow_html=True)
         elif prediction_rounded[0][1] > 0.9:
-            st.markdown('<p style="color:blue;">XSS</p>', unsafe_allow_html=True)
+            st.markdown('<p style="color:blue; font-size:20px;">Ehtimol: XSS</p>', unsafe_allow_html=True)
         else:
-            st.markdown('<p style="color:green;">Oddiy buyruq</p>', unsafe_allow_html=True)
-
+            st.markdown('<p style="color:green; font-size:20px;">Oddiy matn</p>', unsafe_allow_html=True)
     else:
-        st.warning("Iltimos, matn kiriting va tugmani bosing.")
+        st.warning("Iltimos, matnni kiriting va qayta urinib ko'ring.")
