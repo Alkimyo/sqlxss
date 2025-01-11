@@ -47,7 +47,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f9f9f9;  /* Yorqin kulrang fon */
+        background-color: #000000;  /* Yorqin kulrang fon */
     }
     .stTextInput>div>div>textarea {
         font-size: 16px;
